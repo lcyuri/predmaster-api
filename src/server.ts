@@ -1,47 +1,35 @@
 import express from 'express';
-import { deleteItem, getItem, postItem, updateItem } from './dynamodbService.js';
+import { getItem, postItem } from './services/userService.js';
+import { v4 as uuidv4 } from 'uuid';
+import { User } from './interfaces/user.js';
 
 const app = express();
 app.use(express.json());
 
 const port = 7878;
 
-app.get('/api/main/:id', async (req, res) => {
+app.get('/api/user/:id', async (req, res) => {
   try {
     const itemId = req.params.id;
+
     const response = await getItem(itemId);
+
     res.send(response);
   } catch (error) {
-    res.status(500).send('Error getting information');
+    res.status(500).send('Error getting user');
   }
 });
 
-app.post('/api/main', async (req, res) => {
+app.post('/api/user', async (req, res) => {
   try {
+    const newUser = req.body as User;
+    newUser.id = uuidv4();
+
     await postItem(req.body);
-    res.send(req.body);
-  } catch (error) {
-    res.status(500).send('Error posting information');
-  }
-});
 
-app.put('/api/main/:id', async (req, res) => {
-  try {
-    const itemId = req.params.id;
-    await updateItem(itemId, req.body);
     res.send(req.body);
   } catch (error) {
-    res.status(500).send('Error updating information');
-  }
-});
-
-app.delete('/api/main/:id', async (req, res) => {
-  try {
-    const itemId = req.params.id;
-    const response = await deleteItem(itemId);
-    res.send(req.body);
-  } catch (error) {
-    res.status(500).send('Error deleting information');
+    res.status(500).send('Error adding new user');
   }
 });
 
