@@ -1,33 +1,43 @@
-import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { ObjectId } from 'mongodb';
+import { getUsersCollection } from '../data/mongo.js';
+import { User } from '../models/user.js';
 
-const ddbClient = new DynamoDBClient({ region: 'sa-east-1' });
-
-export const getItem = async (itemId: string) => {
-  const params = {
-    TableName: 'main',
-    Key: marshall({ id: itemId })
-  };
-
+export const getUserByUsernameAndPassword = async (username: string, password: string): Promise<User | null> => {
   try {
-    const data = await ddbClient.send(new GetItemCommand(params));
-    return unmarshall(data.Item);
+    const usersCollection = getUsersCollection();
+    const result = await usersCollection.findOne({ username, password });
+    return result || null;
   } catch (error) {
-    console.error('Error getting item from DynamoDB:', error);
+    console.error('getUserByUsernameAndPassword - ', error);
+    throw new Error('Error getting user by username and password');
   }
-};
+}
 
-export const postItem = async (query: any) => {
-  const params = {
-    TableName: 'main',
-    Item: marshall(query)
-  };
-
+export const addNewUser = async (newUser: User): Promise<ObjectId | null> => {
   try {
-    const response = await ddbClient.send(new PutItemCommand(params));
-    return response;
+    const usersCollection = getUsersCollection();
+    const username = newUser.username;
+    const existingUser = await usersCollection.findOne({ username });
+    if (existingUser) {
+      return null;
+    } else {
+      const result = await usersCollection.insertOne(newUser);
+      return result.insertedId;
+    }
   } catch (error) {
-    console.error('Error posting item to DynamoDB: ', error);
+    console.error('addNewUser - ', error);
+    throw new Error('Error adding a new user');
   }
-};
+}
 
+export const deleteUser = async (userId: string): Promise<ObjectId | null> => {
+  try {
+    const usersCollection = getUsersCollection();
+    const objectIdUserId = new ObjectId(userId);
+    const result = await usersCollection.deleteOne({ _id: objectIdUserId });
+    return result.deletedCount === 1 ? objectIdUserId : null;
+  } catch (error) {
+    console.error('deleteUser - ', error);
+    throw new Error('Error deleting user');
+  }
+}

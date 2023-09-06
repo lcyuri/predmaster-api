@@ -1,38 +1,35 @@
 import express from 'express';
-import { getItem, postItem } from './services/userService.js';
-import { v4 as uuidv4 } from 'uuid';
-import { User } from './interfaces/user.js';
+import userController from './controllers/userController.js';
+import { connect, close } from './data/mongo.js';
 
 const app = express();
+const port = 8888;
+
 app.use(express.json());
-
-const port = 7878;
-
-app.get('/api/user/:id', async (req, res) => {
-  try {
-    const itemId = req.params.id;
-
-    const response = await getItem(itemId);
-
-    res.send(response);
-  } catch (error) {
-    res.status(500).send('Error getting user');
-  }
-});
-
-app.post('/api/user', async (req, res) => {
-  try {
-    const newUser = req.body as User;
-    newUser.id = uuidv4();
-
-    await postItem(req.body);
-
-    res.send(req.body);
-  } catch (error) {
-    res.status(500).send('Error adding new user');
-  }
-});
+app.use(userController);
 
 app.listen(port, () => {
-  console.log(`Server is running in port ${port}`);
-})
+  const initApp = async () => {
+    try {
+      await connect();
+      console.log(`Server is running in port ${port}`);
+    } catch {
+      process.exit(1);
+    }
+  }
+
+  initApp();
+});
+
+process.on('SIGINT', () => {
+  const closeApp = async () => {
+    try {
+      await close();
+      process.exit();
+    } catch {
+      process.exit(1);
+    }
+  }
+
+  closeApp();
+});

@@ -1,0 +1,55 @@
+import { MongoClient, Db, Collection } from 'mongodb';
+import { User } from '../models/user.js';
+import dotenv from 'dotenv';
+
+let dbUrl: string;
+let dbName: string;
+let client: MongoClient | null = null;
+
+const initConfig = (): void => {
+  dotenv.config();
+  const dbUsername = process.env.DB_USERNAME;
+  const dbPassword = process.env.DB_PASSWORD;
+  dbUrl = `mongodb+srv://${dbUsername}:${dbPassword}@predmaster-cluster.h8sgutv.mongodb.net?retryWrites=true&w=majority`;
+  dbName = process.env.DB_NAME;
+}
+
+export const connect = async (): Promise<void> => {
+  try {
+    initConfig();
+    client = new MongoClient(dbUrl);
+    await client.connect();
+  } catch (error) {
+    console.error('connect - ', error);
+    throw new Error('Error connecting to database');
+  }
+}
+
+export const close = async (): Promise<void> => {
+  try {
+    await client.close();
+    client = null;
+  } catch (error) {
+    console.error('close - ', error);
+    throw new Error('Error closing database');
+  }
+}
+
+export const getDatabase = (): Db => {
+  try {
+    return client.db(dbName);
+  } catch (error) {
+    console.error('getDatabase - ', error);
+    throw new Error('Error getting database');
+  }
+}
+
+export const getUsersCollection = (): Collection<User> => {
+  try {
+    const db = getDatabase();
+    return db?.collection<User>('users');
+  } catch (error) {
+    console.error('getUsersCollection - ', error);
+    throw new Error('Error getting users collection');
+  }
+}
