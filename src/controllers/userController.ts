@@ -33,7 +33,7 @@ router.post('/predmaster/api/user', async (req: any, res: any, next: any) => {
 
 router.delete('/predmaster/api/user', async (req: any, res: any, next: any) => {
   try {
-    const userId = validateParamsForDelete(req.query.id);
+    const userId = validateUserParamsForDelete(req.query.id);
     const response = await deleteUser(userId);
     if (!response) {
       throw new Error('User not found');
@@ -93,7 +93,7 @@ export const validateUserBodyForPost = (userBody: User): User => {
   return userBody;
 }
 
-export const validateParamsForDelete = (userId: string): string => {
+export const validateUserParamsForDelete = (userId: string): string => {
   if (!userId) {
     throw new Error('User id is required');
   }
