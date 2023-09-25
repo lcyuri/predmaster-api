@@ -2,6 +2,7 @@ import { MongoClient, Db, Collection } from 'mongodb';
 import { User } from '../models/user.js';
 import dotenv from 'dotenv';
 import { Prevision } from '../models/prevision.js';
+import { History } from '../models/history.js';
 
 let dbUrl: string;
 let dbName: string;
@@ -62,5 +63,15 @@ export const getPrevisionCollection = (): Collection<Prevision> => {
   } catch (error) {
     console.error('getPrevisionsCollection - ', error);
     throw new Error('Error getting previsions collection');
+  }
+}
+
+export const getHistoryCollection = (): Collection<History> => {
+  try {
+    const db = getDatabase();
+    return db?.collection<History>('history');
+  } catch (error) {
+    console.error('getHistoryCollection - ', error);
+    throw new Error('Error getting history collection');
   }
 }
