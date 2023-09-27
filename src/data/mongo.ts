@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { Prevision } from '../models/prevision.js';
 import { History } from '../models/history.js';
 import { Settings } from '../models/settings.js';
+import { Alarm } from '../models/alarm.js';
 
 let dbUrl: string;
 let dbName: string;
@@ -84,5 +85,15 @@ export const getSettingsCollection = (): Collection<Settings> => {
   } catch (error) {
     console.error('getSettingsCollection - ', error);
     throw new Error('Error getting settings collection');
+  }
+}
+
+export const getAlarmCollection = (): Collection<Alarm> => {
+  try {
+    const db = getDatabase();
+    return db?.collection<Alarm>('alarm');
+  } catch (error) {
+    console.error('getAlarmCollection - ', error);
+    throw new Error('Error getting alarm collection');
   }
 }
