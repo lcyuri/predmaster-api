@@ -3,6 +3,7 @@ import { User } from '../models/user.js';
 import dotenv from 'dotenv';
 import { Prevision } from '../models/prevision.js';
 import { History } from '../models/history.js';
+import { Settings } from '../models/settings.js';
 
 let dbUrl: string;
 let dbName: string;
@@ -73,5 +74,15 @@ export const getHistoryCollection = (): Collection<History> => {
   } catch (error) {
     console.error('getHistoryCollection - ', error);
     throw new Error('Error getting history collection');
+  }
+}
+
+export const getSettingsCollection = (): Collection<Settings> => {
+  try {
+    const db = getDatabase();
+    return db?.collection<Settings>('settings');
+  } catch (error) {
+    console.error('getSettingsCollection - ', error);
+    throw new Error('Error getting settings collection');
   }
 }

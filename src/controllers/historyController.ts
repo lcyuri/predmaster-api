@@ -75,7 +75,7 @@ export const validateHistoryBodyForPost = (body: string): History => {
     'date',
     'time',
     'variableValue',
-    'vibration',
+    'FFT',
     'valueNotUsed',
     'alarmIndicator',
     'machineName',

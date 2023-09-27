@@ -3,7 +3,7 @@ export interface History {
   date: string;
   time: string;
   variableValue: string;
-  vibration: string;
+  FFT: string;
   valueNotUsed: string;
   alarmIndicator: string;
   machineName: string;
