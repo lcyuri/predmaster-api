@@ -1,8 +1,14 @@
-export interface Prevision {
+import { PredominantFactor } from './types.js';
+
+export interface Prevision extends PrevisionBody {
   id?: string;
-  predictability: string;
-  sensor: string;
-  predominantFactor: string;
-  machine: string;
-  locale: string;
+  clientId: string;
+}
+
+export interface PrevisionBody {
+  failurePredictability: string;
+  sensorName: string;
+  predominantFactor: PredominantFactor;
+  machineName: string;
+  sensorLocale: string;
 }

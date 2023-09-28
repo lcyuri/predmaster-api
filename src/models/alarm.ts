@@ -1,11 +1,16 @@
-export interface Alarm {
+import { AlarmColor, PredominantFactor } from './types.js';
+
+export interface Alarm extends AlarmBody {
   id?: string;
+  clientId: string;
+}
+
+export interface AlarmBody {
   date: string;
   time: string;
   sensorName: string;
   machineName: string;
   sensorLocale: string;
-  predominantFactor: string;
-  color: string;
-  clientId?: string;
+  predominantFactor: PredominantFactor;
+  color: AlarmColor;
 }

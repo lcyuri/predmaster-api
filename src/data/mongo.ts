@@ -51,7 +51,7 @@ export const getDatabase = (): Db => {
 export const getUsersCollection = (): Collection<User> => {
   try {
     const db = getDatabase();
-    return db?.collection<User>('users');
+    return db?.collection<User>('user');
   } catch (error) {
     console.error('getUsersCollection - ', error);
     throw new Error('Error getting users collection');
@@ -61,7 +61,7 @@ export const getUsersCollection = (): Collection<User> => {
 export const getPrevisionCollection = (): Collection<Prevision> => {
   try {
     const db = getDatabase();
-    return db?.collection<Prevision>('previsions');
+    return db?.collection<Prevision>('prevision');
   } catch (error) {
     console.error('getPrevisionsCollection - ', error);
     throw new Error('Error getting previsions collection');

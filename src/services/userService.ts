@@ -6,6 +6,7 @@ export const getUserByUsernameAndPassword = async (username: string, password: s
   try {
     const usersCollection = getUsersCollection();
     const result = await usersCollection.findOne({ username, password });
+
     return result || null;
   } catch (error) {
     console.error('getUserByUsernameAndPassword - ', error);
@@ -13,20 +14,21 @@ export const getUserByUsernameAndPassword = async (username: string, password: s
   }
 }
 
-export const addNewUser = async (newUser: User): Promise<ObjectId | null> => {
+export const addUser = async (user: User): Promise<ObjectId | null> => {
   try {
     const usersCollection = getUsersCollection();
-    const username = newUser.username;
+    const username = user.username;
     const existingUser = await usersCollection.findOne({ username });
+
     if (existingUser) {
       return null;
     } else {
-      const result = await usersCollection.insertOne(newUser);
+      const result = await usersCollection.insertOne(user);
       return result.insertedId;
     }
   } catch (error) {
-    console.error('addNewUser - ', error);
-    throw new Error('Error adding a new user');
+    console.error('addUser - ', error);
+    throw new Error('Error adding user');
   }
 }
 
@@ -35,6 +37,7 @@ export const deleteUser = async (userId: string): Promise<ObjectId | null> => {
     const usersCollection = getUsersCollection();
     const objectIdUserId = new ObjectId(userId);
     const result = await usersCollection.deleteOne({ _id: objectIdUserId });
+
     return result.deletedCount === 1 ? objectIdUserId : null;
   } catch (error) {
     console.error('deleteUser - ', error);

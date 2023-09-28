@@ -1,12 +1,14 @@
-export interface User {
+export interface User extends UserBody {
   id?: string;
-  username: string;
-  password: string;
+  clientId: string;
+}
+
+export interface UserBody extends UserCredentials {
   email: string;
   company: string;
 }
 
-export interface UserParams {
+export interface UserCredentials {
   username: string;
   password: string;
 }

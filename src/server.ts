@@ -6,18 +6,18 @@ import settingsController from './controllers/settingsController.js';
 import alarmController from './controllers/alarmController.js';
 import { connect, close } from './data/mongo.js';
 
-const app = express();
+const server = express();
 const port = 8888;
 
-app.use(express.json());
-app.use(userController);
-app.use(previsionController);
-app.use(historyController);
-app.use(settingsController);
-app.use(alarmController);
+server.use(express.json());
+server.use(userController);
+server.use(previsionController);
+server.use(historyController);
+server.use(settingsController);
+server.use(alarmController);
 
-app.listen(port, () => {
-  const initApp = async () => {
+server.listen(port, () => {
+  const initServer = async () => {
     try {
       await connect();
       console.log(`Server is running in port ${port}`);
@@ -26,11 +26,11 @@ app.listen(port, () => {
     }
   }
 
-  initApp();
+  initServer();
 });
 
 process.on('SIGINT', () => {
-  const closeApp = async () => {
+  const closeServer = async () => {
     try {
       await close();
       process.exit();
@@ -39,5 +39,5 @@ process.on('SIGINT', () => {
     }
   }
 
-  closeApp();
+  closeServer();
 });

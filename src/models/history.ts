@@ -1,18 +1,19 @@
-export interface History {
+import { SensorType, VariableType } from './types.js';
+
+export interface History extends HistoryBody {
   id?: string;
+  clientId: string;
+}
+
+export interface HistoryBody {
   date: string;
   time: string;
   variableValue: string;
   FFT: string;
   valueNotUsed: string;
-  alarmIndicator: string;
+  alarmIndicator: string | null;
   machineName: string;
   sensorLocale: string;
-  variableUnity: string;
-  sensorType: string;
-  clientId: string;
-}
-
-export interface HistoryParams {
-  clientId: string;
+  variableType: VariableType;
+  sensorType: SensorType;
 }

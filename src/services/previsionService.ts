@@ -3,37 +3,27 @@ import { getPrevisionCollection } from '../data/mongo.js';
 import { Prevision } from '../models/prevision.js';
 
 
-export const getAllPrevisions = async (): Promise<Prevision[] | null> => {
+export const getPrevisionByClient = async (clientId: string): Promise<Prevision[] | null> => {
   try {
     const previsionCollection = getPrevisionCollection();
-    const result = await previsionCollection.find().toArray();
+    const result = await previsionCollection.find({ clientId }).toArray();
+
     return result || null;
   } catch (error) {
-    console.error('getAllPrevisions - ', error);
-    throw new Error('Error getting all previsions for the user');
+    console.error('getPrevisionByClient - ', error);
+    throw new Error('Error getting prevision by client');
   }
 }
 
-export const getPrevisionById = async (id: string): Promise<Prevision | null> => {
+export const addPrevision = async (prevision: Prevision): Promise<ObjectId> => {
   try {
     const previsionCollection = getPrevisionCollection();
-    const objectIdPrevisionId = new ObjectId(id);
-    const result = await previsionCollection.findOne({ _id: objectIdPrevisionId });
-    return result || null;
-  } catch (error) {
-    console.error('getPrevisionById - ', error);
-    throw new Error('Error getting prevision');
-  }
-}
+    const result = await previsionCollection.insertOne(prevision);
 
-export const addNewPrevision = async (newPrevision: Prevision): Promise<ObjectId> => {
-  try {
-    const previsionCollection = getPrevisionCollection();
-    const result = await previsionCollection.insertOne(newPrevision);
     return result.insertedId;
   } catch (error) {
-    console.error('addNewPrevision - ', error);
-    throw new Error('Error adding a new prevision');
+    console.error('addPrevision - ', error);
+    throw new Error('Error adding prevision');
   }
 }
 
@@ -42,6 +32,7 @@ export const deletePrevision = async (previsionId: string): Promise<ObjectId | n
     const previsionCollection = getPrevisionCollection();
     const objectIdPrevisionId = new ObjectId(previsionId);
     const result = await previsionCollection.deleteOne({ _id: objectIdPrevisionId });
+
     return result.deletedCount === 1 ? objectIdPrevisionId : null;
   } catch (error) {
     console.error('deletePrevision - ', error);
