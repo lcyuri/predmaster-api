@@ -1,4 +1,4 @@
-import { History, HistoryBody } from '../models/history.js';
+import { History } from '../models/history.js';
 
 export const handleClientId = (clientId: string): string => {
   if (!clientId) {
@@ -8,7 +8,7 @@ export const handleClientId = (clientId: string): string => {
   return clientId;
 };
 
-export const handleHistoryBody = (historyBody: string): History => {
+export const handleHistoryBody = (clientId: string, historyBody: string): History => {
   if (!historyBody || historyBody.length === 0) {
     throw new Error('Body is required');
   }
@@ -42,13 +42,9 @@ export const handleHistoryBody = (historyBody: string): History => {
     }
   }
 
-  return addClientIdToHistory(history);
-}
-
-export const addClientIdToHistory = (history: HistoryBody): History => {
   return ({
     ...history,
-    'clientId': process.env.CLIENT_ID
+    'clientId': clientId
   });
 }
 

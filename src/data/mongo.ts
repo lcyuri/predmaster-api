@@ -1,26 +1,15 @@
 import { MongoClient, Db, Collection } from 'mongodb';
 import { User } from '../models/user.js';
-import dotenv from 'dotenv';
 import { Prevision } from '../models/prevision.js';
 import { History } from '../models/history.js';
 import { Settings } from '../models/settings.js';
 import { Alarm } from '../models/alarm.js';
 
-let dbUrl: string;
-let dbName: string;
 let client: MongoClient | null = null;
-
-const initConfig = (): void => {
-  dotenv.config();
-  const dbUsername = process.env.DB_USERNAME;
-  const dbPassword = process.env.DB_PASSWORD;
-  dbUrl = `mongodb+srv://${dbUsername}:${dbPassword}@predmaster-cluster.h8sgutv.mongodb.net?retryWrites=true&w=majority`;
-  dbName = process.env.DB_NAME;
-}
 
 export const connect = async (): Promise<void> => {
   try {
-    initConfig();
+    const dbUrl = process.env.MONGO_URI;
     client = new MongoClient(dbUrl);
     await client.connect();
   } catch (error) {
@@ -41,7 +30,7 @@ export const close = async (): Promise<void> => {
 
 export const getDatabase = (): Db => {
   try {
-    return client.db(dbName);
+    return client.db('predmaster-db');
   } catch (error) {
     console.error('getDatabase - ', error);
     throw new Error('Error getting database');

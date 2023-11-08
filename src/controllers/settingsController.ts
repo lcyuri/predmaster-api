@@ -23,7 +23,8 @@ router.get('/predmaster/api/settings', async (req: any, res: any, next: any) => 
 
 router.post('/predmaster/api/settings', async (req: any, res: any, next: any) => {
   try {
-    const settings = handleSettingsBody(req.body);
+    const clientId = handleClietId(req.query.clientId);
+    const settings = handleSettingsBody(clientId, req.body);
     const response = await addSettings(settings);
     res.send(response);
   } catch (error) {

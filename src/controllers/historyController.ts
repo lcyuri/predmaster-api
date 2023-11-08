@@ -23,7 +23,8 @@ router.get('/predmaster/api/history', async (req: any, res: any, next: any) => {
 
 router.post('/predmaster/api/history', async (req: any, res: any, next: any) => {
   try {
-    const history = handleHistoryBody(req.body);
+    const clientId = handleClientId(req.query.id);
+    const history = handleHistoryBody(clientId, req.body);
     const response = await addHistory(history);
     res.send(response);
   } catch (error) {

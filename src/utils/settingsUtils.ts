@@ -1,4 +1,4 @@
-import { Settings, SettingsBody } from '../models/settings.js';
+import { Settings } from '../models/settings.js';
 
 export const handleClietId = (clientId: string): string => {
   if (!clientId) {
@@ -8,7 +8,7 @@ export const handleClietId = (clientId: string): string => {
   return clientId;
 };
 
-export const handleSettingsBody = (settingsBody: string): Settings => {
+export const handleSettingsBody = (clientId: string, settingsBody: string): Settings => {
   if (!settingsBody || settingsBody.length === 0) {
     throw new Error('Body is required');
   }
@@ -36,13 +36,9 @@ export const handleSettingsBody = (settingsBody: string): Settings => {
     settings[properties[i]] = values[i];
   }
 
-  return addClientIdToSettings(settings);
-}
-
-export const addClientIdToSettings = (settings: SettingsBody): Settings => {
   return ({
     ...settings,
-    'clientId': process.env.CLIENT_ID
+    'clientId': clientId
   });
 }
 

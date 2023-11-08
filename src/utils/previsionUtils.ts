@@ -1,4 +1,4 @@
-import { Prevision, PrevisionBody } from '../models/prevision.js';
+import { Prevision } from '../models/prevision.js';
 
 export const handleClientId = (clientId: string): string => {
   if (!clientId) {
@@ -7,7 +7,7 @@ export const handleClientId = (clientId: string): string => {
   return clientId;
 }
 
-export const handlePrevisionBody = (previsionBody: string): Prevision => {
+export const handlePrevisionBody = (clientId: string, previsionBody: string): Prevision => {
   if (!previsionBody || previsionBody.length === 0) {
     throw new Error('Body is required');
   }
@@ -32,13 +32,9 @@ export const handlePrevisionBody = (previsionBody: string): Prevision => {
     prevision[properties[i]] = values[i];
   }
 
-  return addClientIdToPrevision(prevision);
-}
-
-export const addClientIdToPrevision = (prevision: PrevisionBody): Prevision => {
   return({
     ...prevision,
-    'clientId': process.env.CLIENT_ID
+    'clientId': clientId
   });
 }
 

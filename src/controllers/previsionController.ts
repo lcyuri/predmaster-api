@@ -23,7 +23,8 @@ router.get('/predmaster/api/prevision', async (req: any, res: any, next: any) =>
 
 router.post('/predmaster/api/prevision', async (req: any, res: any, next: any) => {
   try {
-    const newPrevision = handlePrevisionBody(req.body);
+    const clientId = handleClientId(req.query.id);
+    const newPrevision = handlePrevisionBody(clientId, req.body);
     const response = await addPrevision(newPrevision);
     res.send(response);
   } catch (error) {
