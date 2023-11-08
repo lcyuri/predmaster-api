@@ -1,4 +1,4 @@
-import { Alarm, AlarmBody } from '../models/alarm.js';
+import { Alarm } from '../models/alarm.js';
 
 export const handleClientId = (clientId: string): string => {
   if (!clientId) {
@@ -8,7 +8,15 @@ export const handleClientId = (clientId: string): string => {
   return clientId;
 };
 
-export const handleAlarmBody = (alarmBody: string): Alarm => {
+export const handleAlarmColor = (alarmType: string): string => {
+  if (!alarmType) {
+    throw new Error('Alarm type is required');
+  }
+
+  return alarmType;
+}
+
+export const handleAlarmBody = (clientId: string, color: string, alarmBody: string): Alarm => {
   if (!alarmBody || alarmBody.length === 0) {
     throw new Error('Body is required');
   }
@@ -21,8 +29,7 @@ export const handleAlarmBody = (alarmBody: string): Alarm => {
     'sensorName',
     'machineName',
     'sensorLocale',
-    'predominantFactor',
-    'alarmColor'
+    'predominantFactor'
   ];
 
   for (let i = 0; i < values.length; i++) {
@@ -35,13 +42,10 @@ export const handleAlarmBody = (alarmBody: string): Alarm => {
     alarm[properties[i]] = values[i];
   }
 
-  return addClientIdToAlarm(alarm);
-}
-
-export const addClientIdToAlarm = (alarm: AlarmBody): Alarm => {
   return ({
     ...alarm,
-    'clientId': process.env.CLIENT_ID
+    'clientId': clientId,
+    'color': color
   });
 }
 
