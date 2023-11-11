@@ -8,12 +8,12 @@ export const handleClientId = (clientId: string): string => {
   return clientId;
 };
 
-export const handleAlarmColor = (alarmType: string): string => {
-  if (!alarmType) {
-    throw new Error('Alarm type is required');
+export const handleAlarmColor = (alarmColor: string): string => {
+  if (!alarmColor) {
+    throw new Error('Alarm color is required');
   }
 
-  return alarmType;
+  return alarmColor;
 }
 
 export const handleAlarmBody = (clientId: string, color: string, alarmBody: string): Alarm => {

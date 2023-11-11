@@ -7,11 +7,9 @@ import alarmController from './controllers/alarmController.js';
 import { connect, close } from './data/mongo.js';
 import dotenv from 'dotenv';
 
-
 dotenv.config();
 const server = express();
 const port = process.env.PORT || 8888;
-
 
 server.use(express.json());
 server.use(userController);

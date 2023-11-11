@@ -24,7 +24,7 @@ router.get('/predmaster/api/alarm', async (req: any, res: any, next: any) => {
 router.post('/predmaster/api/alarm', async (req: any, res: any, next: any) => {
   try {
     const clientId = handleClientId(req.query.clientId);
-    const color = handleAlarmColor(req.query.alarmType);
+    const color = handleAlarmColor(req.query.color);
     const alarm = handleAlarmBody(clientId, color, req.body);
     const response = await addAlarm(alarm);
     res.send(response);
