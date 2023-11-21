@@ -1,20 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { handleClietId, handleSettingsBody, handleSettingsId } from '../utils/settingsUtils.js';
 import { getSettingsByClient, addSettings, deleteSettings } from '../services/settingsService.js';
+import { handleClientId, handleId } from '../utils/genericUtils.js';
+import { handleSettingsBody } from '../utils/settingsUtils.js';
 
 const router = express.Router();
 router.use(bodyParser.text())
 
 router.get('/predmaster/api/settings', async (req: any, res: any, next: any) => {
   try {
-    const clientId = handleClietId(req.query.clientId);
+    const clientId = handleClientId(req.query.clientId);
     const response = await getSettingsByClient(clientId);
-
     if (!response || response.length === 0) {
       throw new Error('Settings not found');
     }
-
     res.send(response);
   } catch (error) {
     next(error);
@@ -23,7 +22,7 @@ router.get('/predmaster/api/settings', async (req: any, res: any, next: any) => 
 
 router.post('/predmaster/api/settings', async (req: any, res: any, next: any) => {
   try {
-    const clientId = handleClietId(req.query.clientId);
+    const clientId = handleClientId(req.query.clientId);
     const settings = handleSettingsBody(clientId, req.body);
     const response = await addSettings(settings);
     res.send(response);
@@ -34,13 +33,11 @@ router.post('/predmaster/api/settings', async (req: any, res: any, next: any) =>
 
 router.delete('/predmaster/api/settings', async (req: any, res: any, next: any) => {
   try {
-    const settingsId = handleSettingsId(req.query.id);
+    const settingsId = handleId(req.query.id);
     const response = await deleteSettings(settingsId);
-
     if (!response) {
       throw new Error('Settings not found');
     }
-
     res.send(response);
   } catch (error) {
     next(error);

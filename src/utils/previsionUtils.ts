@@ -1,19 +1,10 @@
 import { Prevision } from '../models/prevision.js';
+import { addMainProperties, getLineFromBody } from './genericUtils.js';
 
-export const handleClientId = (clientId: string): string => {
-  if (!clientId) {
-    throw new Error('Client id is required');
-  }
-  return clientId;
-}
-
-export const handlePrevisionBody = (clientId: string, previsionBody: string): Prevision => {
-  if (!previsionBody || previsionBody.length === 0) {
-    throw new Error('Body is required');
-  }
-
+export const handlePrevisionBody = (clientId: string, body: any): Prevision => {
   let prevision: any = {};
-  const values = previsionBody.split('_');
+  const line = getLineFromBody(body);
+  const values = line.split('_');
   const properties = [
     'failurePredictability',
     'sensorName',
@@ -32,15 +23,5 @@ export const handlePrevisionBody = (clientId: string, previsionBody: string): Pr
     prevision[properties[i]] = values[i];
   }
 
-  return({
-    ...prevision,
-    'clientId': clientId
-  });
-}
-
-export const handlePrevisionId = (previsionId: string): string => {
-  if (!previsionId) {
-    throw new Error('Prevision id is required');
-  }
-  return previsionId;
+  return addMainProperties(clientId, prevision);
 }

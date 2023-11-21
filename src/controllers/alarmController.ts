@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { getAlarmByClient, addAlarm, deleteAlarm } from '../services/alarmService.js';
-import { handleAlarmBody, handleAlarmId, handleClientId, handleAlarmColor } from '../utils/alarmUtils.js';
+import { handleAlarmBody, handleAlarmColor } from '../utils/alarmUtils.js';
+import { handleClientId, handleId } from '../utils/genericUtils.js';
 
 const router = express.Router();
 router.use(bodyParser.text())
@@ -10,11 +11,9 @@ router.get('/predmaster/api/alarm', async (req: any, res: any, next: any) => {
   try {
     const clientId = handleClientId(req.query.clientId);
     const response = await getAlarmByClient(clientId);
-
     if (!response || response.length === 0) {
       throw new Error('Alarm not found');
     }
-
     res.send(response);
   } catch (error) {
     next(error);
@@ -35,13 +34,11 @@ router.post('/predmaster/api/alarm', async (req: any, res: any, next: any) => {
 
 router.delete('/predmaster/api/alarm', async (req: any, res: any, next: any) => {
   try {
-    const alarmId = handleAlarmId(req.query.id);
+    const alarmId = handleId(req.query.id);
     const response = await deleteAlarm(alarmId);
-
     if (!response) {
       throw new Error('Alarm not found');
     }
-
     res.send(response);
   } catch (error) {
     next(error);

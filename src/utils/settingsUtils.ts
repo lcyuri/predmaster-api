@@ -1,20 +1,10 @@
 import { Settings } from '../models/settings.js';
+import { addMainProperties, getLineFromBody } from './genericUtils.js';
 
-export const handleClietId = (clientId: string): string => {
-  if (!clientId) {
-    throw new Error('Client id is required');
-  }
-
-  return clientId;
-};
-
-export const handleSettingsBody = (clientId: string, settingsBody: string): Settings => {
-  if (!settingsBody || settingsBody.length === 0) {
-    throw new Error('Body is required');
-  }
-
+export const handleSettingsBody = (clientId: string, body: string): Settings => {
   let settings: any = {};
-  const values = settingsBody.split('#');
+  const line = getLineFromBody(body);
+  const values = line.split('#');
   const properties = [
     'sensorName',
     'machineName',
@@ -26,7 +16,8 @@ export const handleSettingsBody = (clientId: string, settingsBody: string): Sett
     'redAlarmRMS'
   ];
 
-  for (let i = 0; i < values.length; i++) {
+  // Using lenght manually since the txt has more spaces for future implementations
+  for (let i = 0; i < 8; i++) {
     values[i] = values[i].trim();
 
     if ((!values[i] || values[i].length === 0)) {
@@ -36,16 +27,5 @@ export const handleSettingsBody = (clientId: string, settingsBody: string): Sett
     settings[properties[i]] = values[i];
   }
 
-  return ({
-    ...settings,
-    'clientId': clientId
-  });
+  return addMainProperties(clientId, settings);
 }
-
-export const handleSettingsId = (settingsId: string): string => {
-  if (!settingsId) {
-    throw new Error('Settings id is required');
-  }
-
-  return settingsId;
-};

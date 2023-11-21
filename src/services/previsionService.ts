@@ -7,7 +7,6 @@ export const getPrevisionByClient = async (clientId: string): Promise<Prevision[
   try {
     const previsionCollection = getPrevisionCollection();
     const result = await previsionCollection.find({ clientId }).toArray();
-
     return result || null;
   } catch (error) {
     console.error('getPrevisionByClient - ', error);
@@ -19,7 +18,6 @@ export const addPrevision = async (prevision: Prevision): Promise<ObjectId> => {
   try {
     const previsionCollection = getPrevisionCollection();
     const result = await previsionCollection.insertOne(prevision);
-
     return result.insertedId;
   } catch (error) {
     console.error('addPrevision - ', error);
@@ -32,7 +30,6 @@ export const deletePrevision = async (previsionId: string): Promise<ObjectId | n
     const previsionCollection = getPrevisionCollection();
     const objectIdPrevisionId = new ObjectId(previsionId);
     const result = await previsionCollection.deleteOne({ _id: objectIdPrevisionId });
-
     return result.deletedCount === 1 ? objectIdPrevisionId : null;
   } catch (error) {
     console.error('deletePrevision - ', error);

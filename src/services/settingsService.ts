@@ -6,7 +6,6 @@ export const getSettingsByClient = async (clientId: string): Promise<Settings[] 
   try {
     const settingsCollection = getSettingsCollection();
     const result = await settingsCollection.find({ clientId }).toArray();
-
     return result || null;
   } catch (error) {
     console.error('getSettingsByClient - ', error);
@@ -18,7 +17,6 @@ export const addSettings = async (settings: Settings): Promise<ObjectId> => {
   try {
     const settingsCollection = getSettingsCollection();
     const result = await settingsCollection.insertOne(settings);
-
     return result.insertedId;
   } catch (error) {
     console.error('addSettings - ', error);
@@ -31,7 +29,6 @@ export const deleteSettings = async (settingsId: string): Promise<ObjectId | nul
     const settingsCollection = getSettingsCollection();
     const objectId = new ObjectId(settingsId);
     const result = await settingsCollection.deleteOne({ _id: objectId });
-
     return result.deletedCount === 1 ? objectId : null;
   } catch (error) {
     console.error('deleteSettings - ', error);

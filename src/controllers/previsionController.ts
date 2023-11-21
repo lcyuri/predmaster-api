@@ -1,20 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { handleClientId, handlePrevisionBody, handlePrevisionId } from '../utils/previsionUtils.js';
-import { getPrevisionByClient, addPrevision, deletePrevision } from '../services/previsionService.js';
+import { getPrevisionByClient, deletePrevision, addPrevision } from '../services/previsionService.js';
+import { handleClientId, handleId } from '../utils/genericUtils.js';
+import { handlePrevisionBody } from '../utils/previsionUtils.js';
 
 const router = express.Router();
 router.use(bodyParser.text())
 
 router.get('/predmaster/api/prevision', async (req: any, res: any, next: any) => {
   try {
-    const clientId = handleClientId(req.query.id);
+    const clientId = handleClientId(req.query.clientId);
     const response = await getPrevisionByClient(clientId);
-
     if(!response) {
       throw new Error('Prevision not found');
     }
-
     res.send(response);
   } catch (error) {
     next(error);
@@ -23,9 +22,9 @@ router.get('/predmaster/api/prevision', async (req: any, res: any, next: any) =>
 
 router.post('/predmaster/api/prevision', async (req: any, res: any, next: any) => {
   try {
-    const clientId = handleClientId(req.query.id);
-    const newPrevision = handlePrevisionBody(clientId, req.body);
-    const response = await addPrevision(newPrevision);
+    const clientId = handleClientId(req.query.clientId);
+    const prevision = handlePrevisionBody(clientId, req.body);
+    const response = await addPrevision(prevision);
     res.send(response);
   } catch (error) {
     next(error);
@@ -34,13 +33,11 @@ router.post('/predmaster/api/prevision', async (req: any, res: any, next: any) =
 
 router.delete('/predmaster/api/prevision', async (req: any, res: any, next: any) => {
   try {
-    const previsionId = handlePrevisionId(req.query.id);
+    const previsionId = handleId(req.query.id);
     const response = await deletePrevision(previsionId);
-
     if (!response) {
       throw new Error('Prevision not found');
     }
-
     res.send(response);
   } catch (error) {
     next(error);

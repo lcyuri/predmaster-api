@@ -1,28 +1,18 @@
 import { Alarm } from '../models/alarm.js';
+import { addMainProperties, getLineFromBody } from './genericUtils.js';
 
-export const handleClientId = (clientId: string): string => {
-  if (!clientId) {
-    throw new Error('Client id is required');
-  }
-
-  return clientId;
-};
-
-export const handleAlarmColor = (alarmColor: string): string => {
-  if (!alarmColor) {
+export const handleAlarmColor = (color: string): string => {
+  if (!color) {
     throw new Error('Alarm color is required');
   }
 
-  return alarmColor;
+  return color;
 }
 
-export const handleAlarmBody = (clientId: string, color: string, alarmBody: string): Alarm => {
-  if (!alarmBody || alarmBody.length === 0) {
-    throw new Error('Body is required');
-  }
-
+export const handleAlarmBody = (clientId: string, color: string, body: string): Alarm => {
   let alarm: any = {};
-  const values = alarmBody.split('_');
+  const line = getLineFromBody(body);
+  const values = line.split('_');
   const properties = [
     'date',
     'time',
@@ -42,17 +32,7 @@ export const handleAlarmBody = (clientId: string, color: string, alarmBody: stri
     alarm[properties[i]] = values[i];
   }
 
-  return ({
-    ...alarm,
-    'clientId': clientId,
-    'color': color
-  });
+  alarm = { ...alarm, color };
+
+  return addMainProperties(clientId, alarm);
 }
-
-export const handleAlarmId = (alarmId: string): string => {
-  if (!alarmId) {
-    throw new Error('Alarm id is required');
-  }
-
-  return alarmId;
-};
