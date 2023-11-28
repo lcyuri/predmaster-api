@@ -50,7 +50,9 @@ router.delete('/predmaster/api/user', async (req: any, res: any, next: any) => {
 });
 
 router.use((err: any, _req: any, res: any, _next: any) => {
-  if (err.message) {
+  if (err.message === 'User not found') {
+    return res.status(404).send(err.message);
+  } else if (err.message) {
     return res.status(400).send(err.message);
   } else {
     res.status(500).send('Internal server error');
